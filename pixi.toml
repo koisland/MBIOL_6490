@@ -1,0 +1,13 @@
+[workspace]
+authors = ["Keith Oshima <koshima789@gmail.com>"]
+channels = ["conda-forge"]
+name = "MBIOL_6490"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+r = ">=4.5,<4.6"
+r-dplyr = ">=1.2.1,<2"
+r-ggplot2 = ">=4.0.3,<5"
