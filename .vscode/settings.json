@@ -1,6 +1,6 @@
 {
     "positron.r.interpreters.pixiDiscovery": true,
     "positron.r.customBinaries": [
-        "/home/koisland/Projects/MBIOL_6490/.pixi/envs/default/bin/R"
+        "~/.pixi/envs/default/bin/R"
     ]
 }

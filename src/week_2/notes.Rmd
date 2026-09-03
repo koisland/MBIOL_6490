@@ -1,0 +1,45 @@
+# Week 2
+
+## R as a calculator
+```{r}
+(12 + 8) /5 
+round(pi * 4 ^ 2, 0)
+```
+
+To cite R
+```{r}
+citation()
+```
+
+Character vectors take priority when merging vectors of different types:
+```{r}
+a <- c(1, 2, 3)
+b <- c("a", "b", "c")
+c <- c(T, T, F)
+c(a, b, c)
+```
+
+Working with dataframes with base R
+```{r}
+mycars <- mtcars
+# structure
+str(mycars)
+# access elements via [row, col]
+mycars[5, 4]
+# access rows/cols
+mycars[, 2] # col
+mycars[1,]  # row
+# subset via logical vec
+# ex. all rows where column 1 is 21
+mycars[mycars[1] == 21, ]
+```
+
+Run script.
+```{bash}
+Rscript src/week_2/Mean_adjusted_scores.R
+```
+
+Loading datasets
+```{r}
+df <- read.csv("src/week_2/Male_Fertility.csv", header = TRUE, sep = ",")
+```
