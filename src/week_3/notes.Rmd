@@ -1,0 +1,239 @@
+# Week 3
+
+## Summary statistics; Discrete probability distributions
+
+### Variance
+* For each value:
+    * calculate diff from mean and square it
+    * Sum these squares
+    * Divide by n-1
+* Stays the same as n increases
+
+### Standard deviation
+* positive sqrt of variance
+
+### Standard error
+* drops as n increase
+
+### Discrete variables
+* are countable
+* ex. age
+* compared to continuous value like height
+
+### Discrete probability distributions
+* For every avlue of d_var there is a chance of happening (between 0.0 and 1.0)
+* Sum of all events must be 1.0
+* Prob of inverse of event A + prob A equals 1.0
+
+```
+# ex. 6-sided dice where event A is rolling 6
+P(A) = chance of A happening
+```
+
+### Probabilty mass function (PMF)
+* probability of getting single specific value from discrete distriubtion
+    * Usually just asked "chance" of event
+* For 4 die, PMF(12) = 0.096
+
+### What if we want a range?
+* Just add the PMFs
+
+### Cumulative mass function (CMF)
+* sum of PMF up to value
+* ex: CMF(1) = PMF(0) + PMF(1)
+
+### Mean formula
+```
+mean = sum(x * PMF(x))
+```
+
+If given x and PMF:
+```{r}
+x <- c(0, 1, 2, 3, 4)
+pmf <- c(0.1, 0.3, 0.4, 0.15, 0.05)
+sum(x * pmf)
+```
+
+### Binomial distribution
+* trials with success rate (p) and outcome with two categories
+    * n trials
+    * p success rate
+    * k successes
+
+#### PMF
+In R:
+```{r}
+# 30 trials (n)
+# 0.3 success rate (p)
+# 10 successes (k)
+dbinom(10, 30, 0.3)
+```
+
+Examples of the binomial distribution
+
+* Genetics – ¼ offspring have a recessive condition (p = 0.25). If you have 10 offspring, on average how many do you expect to have the condition?
+* Epidemiology – A vaccine is effective in 70% of individuals (p=0.7). In a trial of
+12 patients, what’s the probability exactly 10 respond?
+
+#### Assumptions
+* fixed number of trials (n)
+* two possible outcomes
+* constant probability of success (p)
+* independent trials
+
+#### CMF
+Cumulative mass function
+```{r}
+
+# the number successes up to 9 [0, 9]
+# number of trials (30)
+# success rate (0.3)
+1 - pbinom(9, 30, 0.3)
+```
+
+#### Mean
+```
+# n = 30 and p = 0.3
+mean = np
+variance = np(1-p)
+```
+
+### Hypergeometric distribution
+Binomial without distribution
+* p changes
+* **Need number not ratio.**
+* As population increases ...
+
+```
+# successes
+# successful chances
+# unsuccessful chances
+# trials
+dhyper(x, m, n ,k)
+```
+
+#### Example with changing probabilty
+3 white balls and 3 black balls
+* P(black) where you pick without replacement
+
+```{r}
+dhyper(3,3, 3, 3)
+```
+
+3 coin flips with 3 heads
+* P(heads)
+```{r}
+0.5 * 0.5 * 0.5
+```
+
+#### Examples of hypergeometric distribution
+* Genetic Screening of Populations: Sample individuals from a total population where some carry a specific allele (e.g., CF mutation). Probability that a certain number of sampled people are carriers
+    * Don't sample same person.
+
+#### CMF
+```
+# x = successes up to a value
+phyper(x, m, n, k)
+```
+
+20 white balls or fewer
+```{r}
+phyper(20, 100, 100, 50)
+```
+
+40 white balls or more
+```{r}
+1 - phyper(39, 100, 100, 80) 
+```
+
+### Poisson distribution
+* Distribution that describes scattered events over period of time
+* How many events happen in subset of this period?
+
+#### Examples: Birthdays
+How many months:
+
+* no bday
+* one bday
+* two bday
+
+#### PMF
+```
+# k = number of events
+# mean (for bdays: 68 / 12 = 5.67)
+dpois()
+```
+
+```{r}
+# 0 bdays
+dpois(0, 5.67)
+# 1 bday
+dpois(1, 5.67)
+# 2 bday
+dpois(2, 5.67)
+```
+
+#### CMF
+```
+# 1 month with 68 people is likely 0
+CMF = ppois(number of events up to certain value, mean)
+```
+
+The 0 term useful
+```
+Frequency of not being exposed = f = dpois(0, 2)
+Frequency of being exposed = 1 - f
+```
+
+For one cell
+* Need to multiply by number of cells
+
+#### Common assumptions
+* events occur independenlty
+* event rate is constant
+
+### Geometric distribution
+Less on subsequent events.
+
+Chance of n non-event between event
+* Highest at first event
+
+```
+p * (1 - p)^n
+```
+
+#### PMF
+R function:
+```
+# dgeom(0, 0.1) = 0.1
+# dgeom(1, 0.1) = 0.09
+dgeom(failures between event, frequency of success)
+```
+
+#### Questions
+What is the average spacing
+
+#### CMF
+Probability of having at least 6 people before next COVID patient
+```{r}
+1 - pgeom(5, 0.1)
+```
+
+#### Mean
+Mean gap between patients
+```
+(1-p) / p
+```
+
+#### Examples of geometric distribution
+* Get to success and start again
+* Molecular Biology – In single-cell PCR, each amplification attempt has some
+probability p of yielding a usable product. What is the typical number of failed
+amplifications before the first successful one?
+
+
+#### Critical assumptions
+1. Repeated independent trials
+1. Each trial has two possible outcomes
+1. Prob of success is constant
+1. Trials continue until the first success
