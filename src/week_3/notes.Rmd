@@ -146,12 +146,19 @@ phyper(20, 100, 100, 50)
 1 - phyper(39, 100, 100, 80) 
 ```
 
+#### Assumptions
+1. Fixed number of trials
+1. Two possible outcomes per trial
+1. We know the absolute number of the two outcomes we are picking from
+    * Cannot use proportion as changes probability
+
 ### Poisson distribution
 * Distribution that describes scattered events over period of time
 * How many events happen in subset of this period?
+* Based entirely on the mean
 
 #### Examples: Birthdays
-How many months:
+How many months are expected to have?
 
 * no bday
 * one bday
@@ -172,6 +179,11 @@ dpois(1, 5.67)
 # 2 bday
 dpois(2, 5.67)
 ```
+#### Mean
+```
+mean = m
+variance = m
+```
 
 #### CMF
 ```
@@ -189,13 +201,13 @@ For one cell
 * Need to multiply by number of cells
 
 #### Common assumptions
-* events occur independenlty
+* events occur independently
 * event rate is constant
 
 ### Geometric distribution
 Less on subsequent events.
 
-Chance of n non-event between event
+Chance of n non-events between event
 * Highest at first event
 
 ```
@@ -215,14 +227,17 @@ What is the average spacing
 
 #### CMF
 Probability of having at least 6 people before next COVID patient
+* Given 10% of population has COVID
 ```{r}
+# pgeom(number of non-events, frequency)
 1 - pgeom(5, 0.1)
 ```
 
 #### Mean
 Mean gap between patients
 ```
-(1-p) / p
+Mean = (1-p) / p
+Variance =(1-p)/p^2
 ```
 
 #### Examples of geometric distribution
