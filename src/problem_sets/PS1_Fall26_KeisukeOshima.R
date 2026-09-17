@@ -16,22 +16,52 @@
 ## (1) For each minute, whether or not the fly samples the food;
 ## (2) Each time it feeds, how far it extends its proboscis. 
 
+p_fly_samples_min <- 1 / 9
+
 ## 1A. 6pts. What kind of variables are (1) whether the fly samples the food during a given minute 
 ## and (2) length of its proboscis?
 # [Provide the kinds of variable]
+typ_whether_fly_samples_during_min <- "boolean"
+typ_length_of_proboscis <- "float"
 
 ## 1B. 6pts What type of distribution will you use to appropriately model the waiting time until the fly first samples the food?
 # [Provide the name of the distribution]
+dist_model_fly_samples_waiting_time <- "binomial"
 
-## 1C. 7pts code, 1pt answer Use R to calculate the probability that the fly will sample food in the first 2 minutes of the experiment. 
-[Provide the annotated R code that you use to answer the question]
+## 1C. 7pts code, 1pt answer Use R to calculate the probability that the fly will sample food in the first 2 minutes of the experiment.
+
+# We calculate the probabilty of no sampling by flies in 2 minutes.
+# Subtracting this percent by 1 yields the probability that a fly
+# will sample at least once during that 2 minute period.
+# This is a helper function to calculate the answer and print it.
+calc_print_prob_fly_samples <- function(mins, prob = p_fly_samples_min) {
+  res <- 1 - dbinom(0, mins, prob)
+  print(
+    paste0(
+      "The probability that the fly will sample ",
+      "food after ", mins," minutes of the experiment is ",
+      res,
+      "."
+    )
+  )
+}
+
+min_fly_exp <- 2
+
 # [Provide the answer you obtain by running your code]
+res_1c <- calc_print_prob_fly_samples(min_fly_exp)
 
 ## 1D. 7pts code, 1pt answer Use R to calculate the probability that the fly first samples the food during each of the following one-minute time periods:
 ## 0–1 minutes, 1–2 minutes, 2–3 minutes, ..., 13–14 minutes.
-[Provide the annotated R code that you use to answer the question]
-# [Provide the answers you obtain by running your code]
 
+max_elapsed_time <- 14
+
+# [Provide the answers you obtain by running your code]
+# We iterate by minute (each interval) and calculate the probability
+# As time passes, the probability of the fly sampling the food during any given interval increases.
+for (elapsed_time in seq(max_elapsed_time)) {
+  calc_print_prob_fly_samples(elapsed_time)
+}
 
 ###
 ### Question 2
