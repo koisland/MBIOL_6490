@@ -1,0 +1,155 @@
+# Week 4
+
+## Continuous distributions
+Defined by "Probability density functions" (PDF)
+```
+dnorm(x value, mean, sd)
+```
+
+mu = mean
+sigma = std 
+
+Area under probability distribution curve is 1
+
+Can be negative
+
+* Unlike binomial where based on trials (0..n_trials)
+
+Ranges in continuous distribution defined by the "Cumulative density function" (CDF)
+```
+pnorm(value, mean sd)
+```
+
+`pnorm()` integrates the normal distr from left side (-inf) to the value given.
+
+```{r}
+pnorm(30, 40, 10)
+```
+
+What about a slice?
+* ex. What fraction of dist between 25 and 30?
+
+```{r}
+pnorm(30, 40, 10) - pnorm(25, 40, 10)
+```
+
+Upper part. Greater than certain value
+```{r}
+1 - pnorm(30, 40, 10)
+```
+
+## Q1
+```{r}
+# Also rule-of-thumb (95% in two stdev), so 5% / 2 = 0.225
+1 - pnorm(7, 5, 1)
+```
+
+## Rules-of-thumb for all normal distributions
+* 1 stdev within mean covers 68%
+* 2 stdev within mean covers 95%
+* 3 stdev within mean covers 99.7%
+
+## Q2
+Less than 60 mm Hg
+```{r}
+pnorm(60, 77, 11.6)
+```
+
+## Q3
+Greater than 90 mm Hg
+```{r}
+1- pnorm(90, 77, 11.6)
+```
+
+## Q4
+Between 60 and 90 mm Hg
+```{r}
+pnorm(90, 77, 11.6) - pnorm(60, 77, 11.6)
+```
+
+## Comparison between normal and binomial distribution
+Discrete steps.
+Binomial cannot use floats
+
+When `np(1-p)` is `>10`, the binomial distribution with success rate `p`
+approximates to the normal distribution with `μ = np` and `σ2 = np(1 – p)`
+
+## Comparison between other distributions
+Hypergeometric
+
+* Number of samples less than 10%
+* approximates binomial with p = successes/total population and n = k
+
+Poisson
+
+* m > 10
+* approximates to normal distribution
+
+## Sampling and SEM
+Non-trivial to get representative sample
+
+Take many random samples of a population and calculate the mean of each sample, these means will form a normal distribution around the population 
+
+Standard error of the mean (SEM)
+
+* Standard deviation of this distibution
+* **How well does sample represent the mean?**
+    * Larger sample = more certain (precision)
+
+```
+SEM = sd / sqrt(N)
+```
+
+```{r}
+data <- c(1, 2, 3)
+SEM <- sd(data) / sqrt(length(data))
+SEM
+```
+
+```{r}
+library("plotrix")
+
+SEM_plotrix <- std.error(data)
+print(SEM == SEM_plotrix)
+```
+
+Average across n samples.
+
+## Confidence Interval
+How sure we are the population mean is within our calculated sample mean?
+
+less confident with smaller interval
+
+```
+CI = mean +/- critical value * SEM 
+```
+
+* critical value often the stdev
+* 95% confidence (1.96 stdev) is common
+
+Need to get X% probability covered
+```{r}
+# Capture 99.5% of distribution
+# mean 0
+# stdev 1
+qnorm(0.995, 0, 1)
+```
+
+Can also use t-test
+```{r}
+res <- t.test(data, conf.level = 0.95)
+res$conf.int
+```
+
+Error bars and SE
+* 1SE where 68% confident value in between 
+
+## Summary
+* stdev: How much variation exists among data points in the sample/population?
+* SEM: How precise is my estimate of the population mean?
+* CI: In what range of values would I expect the mean to lie?
+
+## Central limit theorem
+Data often distributed normally in nature
+
+The distribution of sample means from any distribution has a normal distribution
