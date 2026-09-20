@@ -22,12 +22,15 @@ p_fly_samples_min <- 1 / 9
 ## and (2) length of its proboscis?
 # [Provide the kinds of variable]
 # TODO:
-typ_whether_fly_samples_during_min <- "boolean"
-typ_length_of_proboscis <- "float"
+typ_whether_fly_samples_during_min <- "Logical"
+typ_length_of_proboscis <- "Numeric"
+print(paste0("Whether the fly samples the food during a given minute is a ", typ_whether_fly_samples_during_min, " variable."))
+print(paste0("The length of its proboscis is a ", typ_length_of_proboscis, " variable."))
 
 ## 1B. 6pts What type of distribution will you use to appropriately model the waiting time until the fly first samples the food?
 # [Provide the name of the distribution]
-dist_model_fly_samples_waiting_time <- "binomial"
+dist_1b <- "binomial"
+print(paste0("The ", dist_1b, " distribution appropriately models the waiting time until the fly first samples the food."))
 
 ## 1C. 7pts code, 1pt answer Use R to calculate the probability that the fly will sample food in the first 2 minutes of the experiment.
 
@@ -79,7 +82,8 @@ avg_n_droplets_per_student <- n_droplets / n_students
 
 ## 2A. 6pts. What type of probability distribution will you use to model these data?
 #  [Provide the name of the distribution]
-typ_dist_2c <- "poisson"
+dist_2c <- "poisson"
+print(paste0("The ", dist_2c, " distribution appropriately models disease and chance of sickness."))
 
 ## 2B. 7pts code, 1pt answer. 10pts How many of Professor Jason’s students are at risk of getting sick? 
 
