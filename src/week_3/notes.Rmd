@@ -168,7 +168,7 @@ How many months are expected to have?
 ```
 # k = number of events
 # mean (for bdays: 68 / 12 = 5.67)
-dpois()
+dpois(k, mean)
 ```
 
 ```{r}
@@ -242,10 +242,7 @@ Variance =(1-p)/p^2
 
 #### Examples of geometric distribution
 * Get to success and start again
-* Molecular Biology – In single-cell PCR, each amplification attempt has some
-probability p of yielding a usable product. What is the typical number of failed
-amplifications before the first successful one?
-
+* Molecular Biology – In single-cell PCR, each amplification attempt has some probability p of yielding a usable product. What is the typical number of failed amplifications before the first successful one?
 
 #### Critical assumptions
 1. Repeated independent trials
