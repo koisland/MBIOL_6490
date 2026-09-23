@@ -63,9 +63,8 @@ max_elapsed_time <- 14
 
 # [Provide the answers you obtain by running your code]
 # We iterate by minute (each interval) and calculate the probability using dgeom so it only gets that slice of the distribution
-# As time passes, the probability of the fly sampling the food during any given interval decreases as more chances for fly to sample and less likely.
+# As time passes, the probability of the fly sampling the food during any given interval decreases as more chances for fly to sample food.
 for (elapsed_time in seq(max_elapsed_time)) {
-  # res_1d <- 1 - pgeom(elapsed_time-1, p_fly_samples_min)
   res_1d <- dgeom(elapsed_time, p_fly_samples_min)
   printc(
     paste0(
@@ -86,7 +85,7 @@ for (elapsed_time in seq(max_elapsed_time)) {
 
 n_students <- 67
 n_droplets <- 1000
-thr_droplets_sick <- 20
+threshold_droplets_sick <- 20
 avg_n_droplets_per_student <- n_droplets / n_students 
 
 ## 2A. 6pts. What type of probability distribution will you use to model these data?
@@ -97,8 +96,8 @@ printc(paste0("2a. The ", dist_2c, " distribution appropriately models disease a
 ## 2B. 7pts code, 1pt answer. 10pts How many of Professor Jason’s students are at risk of getting sick? 
 
 # [Provide the answer you obtain by running your code]
-# This is the probability for a single student having 20 particles or more
-prob_sick <- 1 - ppois(thr_droplets_sick - 1, avg_n_droplets_per_student)
+# This is the probability for a single student having 20 particles or more and getting sick.
+prob_sick <- 1 - ppois(threshold_droplets_sick - 1, avg_n_droplets_per_student)
 
 # Multiplying by the number of students gives the total number sick
 n_sick <- n_students * prob_sick
@@ -170,33 +169,34 @@ n_utah_grants <- 7
 ## 4A. 7pts code, 1pt answer. Use R to calculate each of the probabilities of having from 0 to 12 NIH grants funded.
 
 # [Provide the answers you obtain by running your code]
-for (n in seq(n_nih_grants + 1)) {
-  n <- n - 1
-  res_4a_n <- dbinom(n, n_nih_grants, prob_nih_grant_funding)
-  printc(paste0("4a. The probability that ", n, " of ", n_nih_grants, " NIH grants will be funded is ", res_4a_n, "."))
+for (n_nih_grant in seq(n_nih_grants + 1)) {
+  n_nih_grant <- n_nih_grant - 1
+  res_4a_n_nih_grant <- dbinom(n_nih_grant, n_nih_grants, prob_nih_grant_funding)
+  printc(paste0("4a. The probability that ", n_nih_grant, " of ", n_nih_grants, " NIH grants will be funded is ", res_4a_n_nih_grant, "."))
 }
 
 ## 4B. 7pts code, 1pt answer. Use R to calculate each of the probabilities of having from 0 to 7 grants funded by the State of Utah.
 
 # [Provide the answers you obtain by running your code]
-for (n in seq(n_utah_grants + 1)) {
-  n <- n - 1
-  res_4b_n <- dbinom(n, n_utah_grants, prob_utah_grant_funding)
-  printc(paste0("4b. The probability that ", n, " of ", n_utah_grants, " Utah grants will be funded is ", res_4b_n, "."))
+for (n_utah_grant in seq(n_utah_grants + 1)) {
+  n_utah_grant <- n_utah_grant - 1
+  res_4b_n_utah_grant <- dbinom(n_utah_grant, n_utah_grants, prob_utah_grant_funding)
+  printc(paste0("4b. The probability that ", n_utah_grant, " of ", n_utah_grants, " Utah grants will be funded is ", res_4b_n_utah_grant, "."))
 }
 
 ## 4C. 7pts code, 1pt answer. Using R code, calculate the probability you end up getting more grants funded by the State of Utah than by NIH.
 
 # [Provide the answer you obtain by running your code]
 res_4c <- 0
-for (n in seq(n_utah_grants + 1)) {
-  n <- n - 1
-  prob_utah_grant <- dbinom(n, n_utah_grants, prob_utah_grant_funding)
-  # Less than n so need to subtract 1
-  prob_nih_lt_n_utah_grant <- pbinom(n-1, n_nih_grants, prob_nih_grant_funding)
+for (n_utah_grant in seq(n_utah_grants + 1)) {
+  # Need 0 and R is 1-based
+  n_utah_grant <- n_utah_grant - 1
+  prob_utah_grant <- dbinom(n_utah_grant, n_utah_grants, prob_utah_grant_funding)
+  # Less than n so need to subtract 1 for NIH grants
+  prob_nih_lt_n_utah_grant <- pbinom(n_utah_grant-1, n_nih_grants, prob_nih_grant_funding)
   # Probabilty we get n utah grants and less than n nih grants
   prob_joint <- prob_utah_grant * prob_nih_lt_n_utah_grant
-
+  # Sum probabilities to get answer
   res_4c <- res_4c + prob_joint
 }
 printc(paste0("4c. The probability we get more grants funded by the State of Utah than by NIH is ", res_4c, "."))
@@ -209,7 +209,7 @@ printc(paste0("4c. The probability we get more grants funded by the State of Uta
 ##  15.76, 19.56, 20.98, 20.98, 19.71, 16.05, 22.73, 16.93, 14.58, 19.47, 18.78, 15.91, 22, 22.45, 16.78, 17.49, 18.43, 19.21, 19.29, 21.09, 20.15, 18.14, 23.74, 20.03, 22.76
 
 sample_food_truck_costs <- c(
-  5.76, 19.56, 20.98, 20.98, 19.71, 16.05, 22.73, 16.93, 14.58, 19.47, 18.78, 15.91, 22, 22.45, 16.78, 17.49, 18.43, 19.21, 19.29, 21.09, 20.15, 18.14, 23.74, 20.03, 22.76
+  15.76, 19.56, 20.98, 20.98, 19.71, 16.05, 22.73, 16.93, 14.58, 19.47, 18.78, 15.91, 22, 22.45, 16.78, 17.49, 18.43, 19.21, 19.29, 21.09, 20.15, 18.14, 23.74, 20.03, 22.76
 )
 n_sample_food_trucks <- length(sample_food_truck_costs)
 
@@ -227,10 +227,10 @@ two_sem_5ag <- sem_5ag * 2
 critical_value_90 <- 1.645
 critical_value_95 <- 1.96
 
-ci_95_l_5ag <- mean_5ag - critical_value_95 * sem_5ag
-ci_95_r_5ag <- mean_5ag + critical_value_95 * sem_5ag
-ci_90_l_5ag <- mean_5ag - critical_value_90 * sem_5ag
-ci_90_r_5ag <- mean_5ag + critical_value_90 * sem_5ag
+ci_95_left_5ag <- mean_5ag - critical_value_95 * sem_5ag
+ci_95_right_5ag <- mean_5ag + critical_value_95 * sem_5ag
+ci_90_left_5ag <- mean_5ag - critical_value_90 * sem_5ag
+ci_90_right_5ag <- mean_5ag + critical_value_90 * sem_5ag
 
 ## For 5B-G, provide the answers you calculated with your code. 1 pt for each answer.
 ## 5B. mean
@@ -252,7 +252,7 @@ printc(paste0("5e. Two standard errors of mean", stmt_5ag, two_sem_5ag, "."))
 
 ## 5F. 95% confidence interval
 # [Provide your answer]
-printc(paste0("5f. The 95% confidence interval", stmt_5ag, ci_95_l_5ag, " and ", ci_95_r_5ag, "."))
+printc(paste0("5f. The 95% confidence interval", stmt_5ag, ci_95_left_5ag, "-", ci_95_right_5ag, "."))
 
 ## 5G. 90% confidence interval
-printc(paste0("5g. The 90% confidence interval", stmt_5ag, ci_90_l_5ag, " and ", ci_90_r_5ag, "."))
+printc(paste0("5g. The 90% confidence interval", stmt_5ag, ci_90_left_5ag, "-", ci_90_right_5ag, "."))
