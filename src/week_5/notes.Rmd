@@ -1,0 +1,144 @@
+# Experimental Design
+
+## Descriptive
+Characteristics of a phenomenon
+
+* bg to help create hypothesis
+* ex. metabolite levels in adult mouse liver vs mouse weight
+
+Statistics
+
+* mean, frequencies, etc.
+* clustering
+* models
+
+## Correlational
+Relationship between variables
+
+* Indirect evidence for/against hypotheses
+
+Statistics
+
+* same as before
+* hypothesis testing
+
+## Experimental
+Equivalent subjects assigned to different conditions/treatments
+
+* Examine relationship by direct cause & effect
+* ex. metabolite levels in adult mouse +/- treatment
+
+Standard but may not be possible
+
+* not feasible
+* not ethical
+* not perfect
+ 
+## Experimental design: Steps
+
+### 1. Define big-*picture goal(s) of your project
+ex. How are motile spermatozoa produced?
+
+* Goal: To determine how male germ cells differentiate into motile spermatozoa
+
+### 2. Subdivide goals into manageable aims and questions
+Need to be:
+
+* concrete
+* reasonably sized
+* addressable with current methods
+
+### 3. Define research hypotheses
+What makes a good research hypothesis?
+
+* Based on knowledge
+* Propose an expected relationship between variables
+* Brief
+* Testable by gathering data & comparing different conditions
+* Leads to interpretable experimental outcomes
+* Statement, not a question
+
+How do we test the null hypothesis? probability!
+
+### 4. Define variables
+Also known as data. Can be measured or counted
+
+* ex. motility of sperm
+
+#### Data types
+* continuous: can be any numerical values within a range: measured
+* discrete: distinct numerical values. counted
+* nominal: any qualitative value
+* ordinal: ordered set of qualitative values
+* binary: only two possible values
+
+### 5. Define samples to be collected/analyzed
+* type
+* number
+* how to collect them
+
+#### Sampling
+Goal: Independent sampling from a population should **result in representative data that is similar to the population**
+
+* Depends on method and n
+
+Why do we care?
+
+* internal validity: a well-controlled experimental design
+* external validity: application to whole population or bigger picture
+
+##### Bias
+Certain individuals are over- or under- represented.
+
+##### Random
+Simple. Picking individually from a population
+
+##### Systematic
+Create listing of population. Start at random point, and select every nth individual.
+
+* Different listing produces different results
+
+##### Cluster
+Divide population into groups (clusters) and randomly select some of the clusters.
+
+* Could be biased
+
+##### Stratified
+Distinct subpopulations. Subdivide population and select from each group.
+
+* Ensure all represented. Like with a percent.
+* Decreases sample-to-sample variation
+
+##### Paired
+* Individual samples are paired during analysis to control for their similarities
+    * Two similar individuals
+    * The same individual at different time points
+ 
+### 6. Define plan for measurement
+Consistency and reproducibility
+
+#### Biological variation
+Difference in measurement due to natural variability
+
+Use biological replicates (more samples)
+
+#### Technical variation
+Differences in measurement due to technical causes
+
+Use technical replicates (test same sample repeatedly)
+
+#### Katrina's cats
+Sample bias
+
+#### Carl's flies
+From same bottle with two aliquouts (technical variation)
+
+2 groups (old and young)
+* with 3 bottles
+* **6 samples total**
+
+#### Sample size (n)
+* Should refer to biological replicates unless looking at technical replicability
+* Consider each group/condition separately. Try to have same n for different groups.
+* Report n in your results/figures
+* Decide on n ahead of time and include plan in your proposal.
