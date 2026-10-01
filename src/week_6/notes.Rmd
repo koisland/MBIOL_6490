@@ -1,0 +1,156 @@
+# Hypothesis testing
+Did the exp detect an effect?
+
+H0 proposes no difference
+
+Sampling imprecise so need to measure uncertainty
+
+What is probability no actual difference that observe the amount of difference due to chance?
+
+p value
+
+* prob repeated the exp inf times, random var yields
+    * obs results
+    * results rare
+    * results very rare
+
+Null H0 no diff
+
+Assumptions underlie hypothesis testing
+
+* random sampling
+* correct spec of H0
+* fixed signif level
+* appropirate test stat
+
+## Hypothesis testing (parametric)
+parametric
+
+* specific dist
+* use params (mean/sd)
+
+nonparametric
+
+* no assumption of dist
+* use dist-free features
+
+## One-sample z-test
+Collect mean and stdev of data in exp
+
+How likely is the data coming from a population which we know the mean and variance?
+
+
+### Z-score
+variable value as measured from the mean and scaled to the sd of distribution
+
+```
+formula: z = (variable value - mean) / sd
+```
+
+critical region
+
+### Assumptions
+1. continuous data
+2. normal probability distribution
+3. random sample from its population
+4. population standard deviation is known
+
+### How normal?
+1. Graph it
+2. Can use Shapiro-Wilk normality test
+    * A high p-value means it would mean it is normal distributed.
+
+```R
+shapiro.test(data vector)
+```
+
+### Usage
+```
+z = mean_sample - mean_known / (stdev_known / sqrt(N_exp))
+```
+
+One sample z test
+```R
+library("BSDA")
+z.test(sample, mu = pop_mean, sigma.x = pop_sd, alternative = "")
+```
+
+Full example with blood glucose level in population. 30 individual cohort wiht new medication. Is this mean significantly greater than the population (null distribution)?
+
+```{r}
+library("BSDA")
+
+# Data
+pop_mean <- 85 # mg/d
+pop_stdev <- 15 # mg/dl
+load("src/week_6/Parametric_data-2.RData")
+
+mean(glucose_results)
+# Test normality
+shapiro.test(glucose_results)
+z.test(
+    glucose_results,
+    mu = pop_mean,
+    sigma.x = pop_stdev,
+    alternative ="greater"
+)
+```
+
+Two-sided is default
+
+Two-tailed with changed stdev.
+```{r}
+z.test(
+    glucose_results,
+    mu = 85,
+    sigma.x = 30,
+)
+```
+
+* harder to detect result (higher p-value) since data range is higher.
+
+## t-test
+two normally-distributed datasets that you want compare
+
+testing variance
+* Need to know if the sample dist have different variances
+* If:
+    * equal, average variance is used
+    * unequal, two variances are weighted
+
+Outputs p value
+```r
+var.test(A, B)
+```
+
+```r
+t.test(A, B, var.equal = F)
+```
+
+poll ev
+```{r}
+t.test(x, y, var.equal = F)
+```
+
+```{r}
+# Check if variance equal
+# if p < 0.05, cannot reject H0 that variance is different -> variance is equal
+var.test(x, z)
+t.test(x, z, var.equal = T)
+```
+
+### Paired t-test
+mean of differences betwene results
+
+```r
+t.test(A, B, paired = T, conf.level = 0.95)
+```
+A & B do not have to be normally distributed
+
+Differences between A & B do have to be normally distributed.
+
+```r
+shapiro.test(B-A)
+```
+
+![](src/week_6/flowchart.png)
