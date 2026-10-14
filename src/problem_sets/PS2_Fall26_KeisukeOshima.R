@@ -303,7 +303,7 @@ for (bird in rownames(bird_data)) {
     "4b. We ", outcome, " the null hypothesis that there is no significant difference ",
     "between the proportions within disturbed and undisturbed birds ",
     "for ", bird, " compared to all other birds. ",
-    "(", "p-value = ", res_4b_bird$p.value, ", chi-squared statistic = ", res_4b_bird$statistic,  ")"
+    "(alpha=0.05, ", "p-value = ", res_4b_bird$p.value, ", chi-squared statistic = ", res_4b_bird$statistic,  ")"
   ))
   # And for the comment.
   # printc(paste0(bird, " = ", res_4b_bird$p.value))
@@ -323,7 +323,8 @@ for (bird in rownames(bird_data)) {
 # [As a comment, provide your answer for Q4C.]  
 
 # 4c. We find that the proportion in disturbed and undisturbed birds is significantly different (p < 0.05) for
-# Ruby-crowned kinglet, Ruby-crowned kinglet, Spotted towhee, Hermit thrush, and Dark-eyed junco
+# Ruby-crowned kinglet (p = 1.43e-7), Ruby-crowned kinglet (p = 7.23e-11),
+# Spotted towhee (p = 0.0378), Hermit thrush (p = 0.00149), and Dark-eyed junco (p = 3.76e-6)
 # compared to all other birds
 
 ###end of PS2
