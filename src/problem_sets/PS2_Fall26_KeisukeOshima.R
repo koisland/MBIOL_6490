@@ -157,8 +157,8 @@ res_3a <- t.test(fasting$Before, fasting$After, paired = T)
 stopifnot(res_3a$p.value < 0.05)
 printc(paste0(
   "3a. We can reject the null hypothesis that for individuals who had previously fasted, there is no difference ", 
-  "in their glucose levels before drinking juice vs after drinking juice",
-  " (alpha=0.05, p = ", res_3a$p.value, ", statistic = ", res_3a$statistic, ")"
+  "in their glucose levels before drinking juice vs after drinking juice ",
+  "(alpha=0.05, p = ", res_3a$p.value, ", statistic = ", res_3a$statistic, ")"
 ))
 # 3a. We can reject the null hypothesis that for individuals who had previously fasted,
 # there is no difference in their glucose levels before drinking juice vs after drinking juice
@@ -185,8 +185,8 @@ res_3b <- wilcox.test(fed$Before, fed$After, paired=T, exact = F)
 stopifnot(res_3b$p.value < 0.05)
 printc(paste0(
   "3b. We can reject the null hypothesis that for individuals who did not fast (fed individuals), there is no difference ", 
-  "in their glucose levels before drinking juice vs after drinking juice",
-  " (alpha=0.05, p = ", res_3b$p.value, ", statistic = ", res_3b$statistic, ")"
+  "in their glucose levels before drinking juice vs after drinking juice ",
+  "(alpha=0.05, p = ", res_3b$p.value, ", statistic = ", res_3b$statistic, ")"
 ))
 
 # 3b. We can reject the null hypothesis that for individuals who did not fast (fed individuals),
@@ -227,8 +227,8 @@ res_3c <- t.test(
 stopifnot(res_3c$p.value > 0.05)
 printc(paste0(
   "3c. We fail to reject the null hypothesis that there is no difference in glucose levels ",
-  "between fasted and non-fasted individuals before drinking juice",
-  " (alpha=0.05, p = ", res_3c$p.value, ", statistic = ", res_3c$statistic, ")"
+  "between fasted and non-fasted individuals before drinking juice ",
+  "(alpha=0.05, p = ", res_3c$p.value, ", statistic = ", res_3c$statistic, ")"
 ))
 # 3c. We fail to reject the null hypothesis that there is no difference in glucose levels
 # between fasted and non-fasted individuals before drinking juice
@@ -252,7 +252,11 @@ printc(paste0(
 ## Lastly, in 1-2 sentences, provide an interpretation of your results.  
 
 # use chi-squared test on bird observation data counts since categorical
-res_4a <- chisq.test(as.matrix(bird_data))
+mtx_bird_data <- as.matrix((bird_data))
+
+res_4a <- chisq.test(mtx_bird_data)
+# check if all greater than 5 in expected data (not 80%) to meet chi-squared assumption
+stopifnot(min(res_4a$expected) >= 5)
 
 printc(paste0(
   "4a. The chi-squared value is ", res_4a$statistic, ".\n",
@@ -266,8 +270,11 @@ printc(paste0(
   "4a. We reject the null hypothesis that the proportions ",
   "within the disturbed and undisturbed columns are the same. ",
   "There is some difference in proportion for one or more birds between disturbed and undisturbed groups. ",
-  " (alpha=0.05, p = ", res_4a$p.value, ", chi-squared statistic = ", res_4a$statistic, ")"
+  "(alpha=0.05, p = ", res_4a$p.value, ", chi-squared statistic = ", res_4a$statistic, ")"
 ))
+# 4a. We reject the null hypothesis that the proportions within the disturbed and undisturbed columns are the same.
+# There is some difference in proportion for one or more birds between disturbed and undisturbed groups. 
+# (alpha=0.05, p = 4.08562943578399e-17, chi-squared statistic = 86.2655667279363)
 
 ## Q4B. To identify which, if any, bird species show a different distribution in 
 ## the two habitats, compare each of the 6 species to an amalgamation (a sum) of 
@@ -284,12 +291,13 @@ for (bird in rownames(bird_data)) {
     specific=bird_data[rownames(bird_data) == bird, ],
     other=colSums(bird_data[rownames(bird_data) != bird, ])
   )
-  # Greater than 5 in count to meet assumption
-  stopifnot(min(mtx_bird_and_other) >= 5)
 
   # Perform chi-square test since assumptions met
   # Also Yates' continuity correction for more accurate p-value
   res_4b_bird <- chisq.test(mtx_bird_and_other, correct = T)
+  
+  # Greater than 5 in expected count to meet assumption of chi-squared
+  stopifnot(min(res_4b_bird$expected) >= 5)
 
   # Does meet p-value threshold?
   if (res_4b_bird$p.value < 0.05) {
