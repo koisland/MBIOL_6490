@@ -5,3 +5,5 @@
 # Outputs of rmarkdown and knitr
 *.html
 notes_files
+
+*.RData
