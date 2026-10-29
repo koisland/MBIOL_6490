@@ -1,0 +1,237 @@
+# Multiple comparisons including ANOVA; Misuse of stats & p hacking
+
+## Selective reporting (cherry picking)
+Report favorable or signif results.
+
+Bias to Type 1 error (false positives)
+
+## Publication bias
+Studies with positive (signif) results are more likely to be published than studies that do not.
+
+Are negative results bad science?
+
+## Outcome switching
+Redefine primary outcome of study
+
+Not reporting original outcome of study
+
+## Exclusion of outliers
+ignoring data points because they don't support the hypothesis
+
+okay if mistake
+
+be transparent about criteria for trimming data
+
+## Indirect comparison
+Inferring diff betwen groups without directly comparing them
+
+* Example: A study finds that children do not respond to a medication (p=0.2) and adults do respond (p=0.01)
+    * Tempting to say: adults respond more than children do BUT you didn't actually test that directly
+
+## Sequential tsting
+Testing for significance at multiple points during study
+
+Power
+
+## Data dredging/fishing
+Subdividing data in lots of different ways until you find a significant result
+
+## p-hacking
+Analyzing data with lots of different test until you find a "significant" result
+
+## Multiple comparisons in R
+https://tylervigen.com/spurious-correlations
+
+How to perform stats on multiple comparisons?
+
+1. Adjust your p values
+2. Accept a defined error rate in your conclusions
+
+### Adjust your p-values
+
+#### Bonferroni
+
+* Multiply p-values by the number of comparisons you have made
+* Keep alpha of 0.05
+
+Example:
+```{r}
+raw_values <- c(0.0003, 0.0090, 0.0130, 0.0140, 0.0550, 0.2100)
+p.adjust(raw_values, method = "bonferroni")
+```
+
+Trade-offs
+
+* Conservative
+* Decreasing alpha
+* Trade-off between Type 1 and 2 errors
+* **Reduces false-positives at expense of getting many more false-negatives**
+
+#### Other methods
+Saves more TPs at risk of more FPs
+
+### Accept a defined error rate in your conclusions
+Tolerate a specified rate of FPs in order not to lose any true positives
+
+```r
+p.adjust(p-value vector, method = "BH")
+```
+
+### Random numbers
+```r
+# random uniform
+runif()
+# generating samples from a vector including integers
+sample()
+```
+
+Generating random numbers in R
+```{r}
+runif(1)
+runif(1)
+# num values
+runif(5)
+# num values between minimum and maximum
+runif(2, 1, 3)
+runif(3, -5, 5)
+```
+
+Sampling
+```r
+# size_of_sample
+# replace - sample with replacement. default is false
+sample(vector, size_of_sample, replace = T | F)
+```
+
+```{r}
+sample(1:6, 1)
+sample(1:6, 6)
+sample(1:6, 6, replace=TRUE)
+```
+
+Setting seed
+```{r}
+set.seed(42)
+```
+
+## ANOVA tests in R
+Compare columns in dataframe
+* U-test or t-test between columns
+
+ANOVA (analysis of variance) by Fisher in 1918
+
+* levels are groups
+* Get F statistic
+
+One way ANOVA
+
+* independent variable (with 2 or more groups)
+* ex. effect of drug on anxiety
+
+
+### Data formatting
+* wide vs. long data
+* long data can support factors (uniq values in column)
+* convert wide data to long data
+    * `reshape` and `melt()`
+
+```r
+library(reshape2)
+
+Pet_long <- melt(Pet_data)
+```
+
+Example of reshaping data
+```{r}
+library(reshape2)
+
+# Create matrix
+data <- rbind(
+    c(9, 7, 4),
+    c(8, 6, 3),
+    c(7, 6, 2),
+    c(8, 7, 3),
+    c(8, 8, 4),
+    c(9, 7, 3),
+    c(8, 6, 2)
+)
+colnames(data) <- c("0 mg", "50 mg", "100 mg")
+# Melt data
+long_data <- melt(data)
+colnames(long_data) <- c("Index", "Dose", "Effect")
+long_data
+```
+
+## Starting ANOVA
+Have to check that variance is similar
+```{r}
+library(car)
+
+# p-value > 0.05 so fail to reject null that variance is different
+# i.e. variance is similar
+leveneTest(Effect ~ Dose, data = long_data)
+```
+
+ANOVA and the summary
+```{r}
+anova_drugs <- aov(
+    # Analyze Effect by Dose
+    formula = Effect ~ Dose,
+    data = long_data
+)
+# To get F statistic and p-value
+# If p < 0.05, reject H0 that nothing is happening
+summary(anova_drugs)
+```
+
+Something is different? 0 and 50 mg? 50 to 100 mg?
+
+## TukeyHSD
+The direction, magnitude, and p-values between each column.
+```{r}
+# All pair of columns (Col 1)
+# Difference of means (Col 2)
+# Adjusted p-value (Col 5)
+TukeyHSD(anova_drugs)
+```
+
+## Non-parametric data with Kruskal-Wallis
+```{r}
+# Same format as ANOVA
+kruskal.test(Effect ~ Dose, data = long_data)
+```
+
+No equivalent to Tukey test so we have to use Wilcoxon
+
+```{r}
+pairwise.wilcox.test(
+    long_data$Effect,
+    long_data$Dose,
+    p.adjust.method = "bonferroni"
+)
+```
+
+## Class exercise 2
+```{r}
+pets <- c("Dog", "Cat", "Guinea Pig", "Bird", "Fish", "Reptile")
+places <- c("Salt Lake", "Utah", "Davis")
+data <- rbind(
+    c(156,131,39,17,42,12),
+    c(161,122,21,27,30,16),
+    c(180,120,21,23,19,13)
+)
+colnames(data) <- pets
+rownames(data) <- places
+
+long_data <- melt(data)
+colnames(long_data) <- c("Place", "Pet", "Count")
+
+# Check variance
+
+# ANOVA
+
+# Summary
+
+# TukeyHSD
+
+```
