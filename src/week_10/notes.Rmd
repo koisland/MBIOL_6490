@@ -1,0 +1,169 @@
+# Week 10: Power and error
+
+## Errors
+type 1 error: FP (alpha)
+type 2 error: FN (beta)
+
+## Power
+Probability we will correctly reject the H0
+
+```
+Power = 1 - beta
+```
+
+Not:
+
+* the same as significance level
+* the same as probability we will reject the H0
+
+If no difference between datasets, "power" doesn't actually exist
+
+Changing variables:
+
+* Increase sample size
+    * Decrease type II error
+    * Increase Power
+
+How much power is enough?
+
+* 0.8 - 0.9 (80% - 90% of detecting a real effect)
+
+## Effect size
+Magnitude of difference between distributions
+
+* Is there overlap?
+* How much?
+
+### Cohen's d
+```
+# est    - sample, not population
+# stdev  - measure of variability
+# pooled - combined
+
+d = est diff in means / pooled est stdev
+d = (x1-x2) / s
+```
+
+In R:
+
+```r
+# a and b are two data set vectors
+# paired is by default FALSE
+cohen.d(a, b, paired = F)
+```
+
+But need to do the following before:
+
+1. Check the data distribution
+2. Check for unequal variances
+3. Consider experimental design (unpaired vs paired)
+
+Interpretation
+
+* 0 = no difference
+* range = [-inf, +inf]
+* sign = direction of effect
+* magnitude = strength of effect
+* Difference between groups
+    * 0.2 (small), 0.5 (moderate), and 0.8 (strong)
+
+## Power effects
+
+* effect size -> power
+    * cannot change
+* population var -> power
+    * cannot change
+* sample size -> power
+    * can change
+
+## Power calculations in R
+
+Example: for `t.test` with `r-pwr`
+```r
+pwr.t.test(
+    n = ,
+    d =,
+    sig.level = ,
+    power = ,
+    type = "",
+    alternative = "",
+)
+```
+
+We do an experiment and we expect a medium effect size (say 0.6). We will set our power level = 0.8, our significance level = 0.05, on a two sample, two sided t test.
+```{r}
+library(pwr)
+
+pwr.t.test(
+    d = 0.6,
+    sig.level = 0.05,
+    power = 0.8,
+    type = "two.sample",
+    alternative = "two.sided"
+)
+```
+
+Gives you `n` and you should round up.
+
+Example:
+```{r}
+pwr.t.test(
+    d = 0.2,
+    sig.level = 0.05,
+    power = 0.7,
+    type = "two.sample",
+    alternative = "two.sided"
+)
+```
+
+If drop in n, can recalculate power with `pwr.t2n.test`.
+```{r}
+pwr.t2n.test(
+    n1 = 310,
+    n2 = 250,
+    d = 0.2,
+    sig.level = 0.05,
+    alternative = "two.sided"
+)
+```
+
+## Sensitivity and specificity
+For measuring test/assay performance
+
+```
+Sensitivity = TP / (TP + FN)
+Specificity = TN / (TN + FP)
+```
+
+Example:
+* Total number of people with disease
+* For all people with the disease, how likely are they to be detected
+    * Sensitivity
+
+Example:
+* Total number of people without disease
+* For all people without the disease, how likely are they to not test positive
+
+Practice:
+
+Old
+* TP: 10
+* TN: 85
+* FP: 5
+* FN: 0
+
+```
+Sensitivity = 10 / (10 + 0) = 1.0
+Specificity = 85 / (85 + 5) = 0.944
+```
+
+New:
+* TP: 18
+* TN: 75
+* FP: 5
+* FN: 2
+
+```
+Sensitivity = 18 / (18 + 2) = 0.9
+Specificity = 75 / (75 + 5) = 0.9375
+```

@@ -204,6 +204,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/r-crayon-1.5.3-r45hc72bb7e_2.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/r-diagram-1.6.5-r45ha770c72_4.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/r-doby-4.7.2-r45hc72bb7e_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/r-effsize-0.8.1-r45hc72bb7e_4.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/r-evaluate-1.0.5-r45hc72bb7e_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/r-fontawesome-0.5.3-r45hc72bb7e_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/r-foreach-1.5.2-r45hc72bb7e_4.conda
@@ -234,6 +235,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/r-pkgconfig-2.0.3-r45hc72bb7e_5.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/r-plotrix-3.8_14-r45hc72bb7e_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/r-progressr-1.1.0-r45hacb3a79_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/r-pwr-1.3_0-r45hc72bb7e_6.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/r-quantmod-0.4.29-r45hc72bb7e_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/r-r6-2.6.1-r45hc72bb7e_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/r-rcolorbrewer-1.1_3-r45h785f33e_4.conda
@@ -3049,6 +3051,16 @@ packages:
   run_exports: {}
   size: 4779975
   timestamp: 1782915974070
+- conda: https://conda.anaconda.org/conda-forge/noarch/r-effsize-0.8.1-r45hc72bb7e_4.conda
+  sha256: 8a2218936558aceaa7256b49277d0e322ec7a5b83575de5bc2ee58797ed3eea1
+  md5: 195a16067ea1eb37cf3b6f78d57ed17e
+  depends:
+  - r-base >=4.5,<4.6.0a0
+  license: GPL-2.0-only
+  license_family: GPL2
+  run_exports: {}
+  size: 79488
+  timestamp: 1758363106953
 - conda: https://conda.anaconda.org/conda-forge/noarch/r-evaluate-1.0.5-r45hc72bb7e_1.conda
   sha256: d3accfeab1416151515c37e5edc94b18868998db4936183459f8040117d5c83c
   md5: 4e0c71ab78d7292372a89d4daecb49af
@@ -3422,6 +3434,16 @@ packages:
   run_exports: {}
   size: 542546
   timestamp: 1792365045519
+- conda: https://conda.anaconda.org/conda-forge/noarch/r-pwr-1.3_0-r45hc72bb7e_6.conda
+  sha256: 688b4e48d2f49497f7ca1bf121d1903435abf96e1d186943c50899a244ebe4a2
+  md5: dc2bd1b815e925211060c0f1fe97db52
+  depends:
+  - r-base >=4.5,<4.6.0a0
+  license: GPL-3.0-or-later
+  license_family: GPL3
+  run_exports: {}
+  size: 168623
+  timestamp: 1757669042706
 - conda: https://conda.anaconda.org/conda-forge/noarch/r-quantmod-0.4.29-r45hc72bb7e_0.conda
   sha256: eff2380224e3c9388ab400c68ff5108901ae89c0809954c290704b24238088b6
   md5: 48854f6ebc8d358eb6e2186b731bd009
