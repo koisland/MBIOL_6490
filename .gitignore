@@ -6,4 +6,4 @@
 *.html
 notes_files
 
-*.RData
+/*.RData
