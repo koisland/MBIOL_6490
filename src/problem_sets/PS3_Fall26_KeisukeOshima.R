@@ -23,6 +23,14 @@
 ###  that they did not fast. These datasets are in Canvas as "Glucose_data_PS3.RData"
 ###  Use a significance level of alpha = 0.01.
 
+
+library(effsize)
+library(pwr)
+
+alpha <- 0.01
+
+load("Glucose_data_PS3.RData")
+
 ##   
 ## 1A. You previously (in PS2) tested the null hypothesis:
 ##  "For individuals who had previously fasted, there is no difference in their  
@@ -34,20 +42,54 @@
 
 ##  1Ai. 3 pts. Provide the annotated R code that you use for your calculations.
 
-[Provide the annotated R code that you use to answer 1Ai]
+# Check the data distribution (normal? outliers?)
+norm_res_1a_fasting_before <- shapiro.test(fasting$Before)
+norm_res_1a_fasting_after <- shapiro.test(fasting$After)
+
+# Both datasets have p-values >0.05, so we cannot reject null hypothesis that data is from normal distribution
+# Is normally distributed
+stopifnot(norm_res_1a_fasting_before$p.value > 0.05)
+stopifnot(norm_res_1a_fasting_after$p.value > 0.05)
+
+# Check for unequal variances (*)
+# p-value greater than 0.05 so cannot reject H0 that variance beween groups are equal
+# Variance is equal
+var_res_1a <- var.test(fasting$Before, fasting$After)
+stopifnot(var_res_1a$p.value > 0.05)
+
+# Use effsize::cohen.d to calculate the effect size of the paired dataset
+res_1a <- cohen.d(
+    fasting$Before,
+    fasting$After,
+    paired = T
+)
+res_1a_pwr <- pwr.t.test(
+    # Number of pairs for n
+    n = length(fasting$Before),
+    # Use estimate calculated from cohen.d
+    d = res_1a$estimate,
+    sig.level = alpha,
+    # Is paired data
+    type = "paired",
+    alternative = "two.sided"
+)
 
 ##  1Aii. 2 pts. Provide the value for effect size that you calculated.  
 
 # [As a comment, provide your answer to Q1Aii.]
+# The effect size is -2.3.
 
 ##  1Aiii. 2 pts. Provide the value for power that you calculated.
 
 # [As a comment, provide your answer to Q1Aiii.]
+# The power is 1.
 
 ##  1Aiv. 2 pts. In 1-3 sentences, explain the interpretation of your result with respect
 ##  to effect size and Type II error rate.
 
 # [As a comment, provide your answer to Q1Aiv.]
+# For those who had previously fasted, the difference in glucose levels before and after drinking juice is large (|-2.3| > 0.8)
+# With this effect size, we have a power of 1, meaning we expect to have a Type II error rate of 0.
 
 ##   
 ## 1B. You previously tested the null hypothesis:
@@ -60,20 +102,53 @@
 
 ##  1Bi. 3 pts. Provide the annotated R code that you use for your calculations.
 
-[Provide the annotated R code that you use to answer 1Bi]
+# Check the data distribution (normal? outliers?)
+norm_res_1b_fed_before <- shapiro.test(fed$Before)
+norm_res_1b_fed_after <- shapiro.test(fed$After)
+
+# Both datasets have p-values >0.05, so we cannot reject null hypothesis that data is from normal distribution
+# Is normally distributed
+stopifnot(norm_res_1b_fed_before$p.value > 0.05)
+stopifnot(norm_res_1b_fed_after$p.value > 0.05)
+
+# Check for unequal variances (*)
+# p-value less than 0.05 so we reject H0 that variance between groups are equal
+# Variance is not equal
+var_res_1b <- var.test(fed$Before, fed$After)
+stopifnot(var_res_1b$p.value > 0.05)
+
+res_1b <- cohen.d(
+    fed$Before,
+    fed$After,
+    paired = T
+)
+res_1b_pwr <- pwr.t.test(
+    # Number of pairs for n
+    n = length(fed$Before),
+    # Use estimate calculated from cohen.d
+    d = res_1b$estimate,
+    sig.level = alpha,
+    # Is paired data
+    type = "paired",
+    alternative = "two.sided"
+)
 
 ##  1Bii. 2 pts. Provide the value for effect size that you calculated.  
 
 # [As a comment, provide your answer to Q1Bii.]
+# The effect size is 1.11.
 
 ##  1Biii. 2 pts. Provide the value for power that you calculated.
 
 # [As a comment, provide your answer to Q1Biii.]
+# The power is 0.992.
 
 ##  1Biv. 2 pts. In 1-3 sentences, explain the interpretation of your result with respect
 ##  to effect size and Type II error rate.
 
 # [As a comment, provide your answer to Q1Biv.]
+# For those who did not fast, the difference in glucose levels before and after drinking juice is large (|-1.11| > 0.8)
+# With this effect size, we have a power of 0.992, meaning we expect to have a Type II error rate of 0.008.
 
 ##   
 ## 1C. You previously tested the null hypothesis:
@@ -86,36 +161,78 @@
 
 #  1Ci. 3 pts. Provide the annotated R code that you use for your calculations.
 
-[Provide the annotated R code that you use to answer 1Bi]
+# Check the data distribution (normal? outliers?)
+norm_res_1c_fasting_before <- shapiro.test(fasting$Before)
+norm_res_1c_fed_before <- shapiro.test(fed$Before)
+
+# Both datasets have p-values >0.05, so we cannot reject null hypothesis that data is from normal distribution
+# Is normally distributed
+stopifnot(norm_res_1c_fasting_before$p.value > 0.05)
+stopifnot(norm_res_1c_fed_before$p.value > 0.05)
+
+# Check for unequal variances (*)
+# p-value greater than 0.05 so we cannot reject H0 that variance between groups are equal
+# Variance is equal
+var_res_1c <- var.test(fasting$Before, fed$Before)
+stopifnot(var_res_1c$p.value > 0.05)
+
+# Use effsize::cohen.d to calculate the effect size of the paired dataset
+res_1c <- cohen.d(
+    fasting$Before,
+    fed$Before,
+    # Datasets are not equal and therefore, not paired
+    paired = length(fasting$Before) == length(fed$Before)
+)
+# With two different n's, cannot use pwr.t.test
+res_1c_pwr <- pwr.t2n.test(
+    n1 = length(fasting$Before),
+    n2 = length(fed$Before),
+    d = res_1c$estimate,
+    sig.level = alpha,
+    alternative = "two.sided"
+)
 
 ## 1Cii. 2 pts. Provide the value for effect size that you calculated.  
 
 # [As a comment, provide your answer to Q1Cii.]
+# The effect size is -0.490.
 
 ## 1Ciii. 2 pts. Provide the value for power that you calculated.
 
 # [As a comment, provide your answer to Q1Ciii.]
+# The power is 0.227
 
 ## 1Civ. 2 pts. In 1-3 sentences, explain the interpretation of your result with respect
 ##          to effect size and Type II error rate.
 
 # [As a comment, provide your answer to Q1Civ.]
+# The difference in glucose levels before drinking juice between fasting and fed individuals is small (|-0.490| < 0.5)
+# With this effect size, we have a power of 0.227, meaning we expect to have a Type II error rate of 0.773.
 
 ## 1Cv. 2 pts. In 1-3 sentences, compare your result for part 1C to that obtained in part 
 ##  1A and 1B.
 
 # [As a comment, provide your answer to Q1Cv.]
+# Compared to parts 1A (power=1.0) and 1B (power=0.992), the power for 1C (power=0.227) is much lower
+# meaning we're very likely to fail to reject a false null hypothesis (high beta).
 
 ## 1Cvi. Use R to determine how many pairs of samples would be required to achieve
 ##  a power of 0.8.
 
 ##  3 pts. Provide the annotated R code that you use for your calculations.
 
-[Provide the annotated R code that you use to answer 1Cvi]
+res_1c_vi <- pwr.t.test(
+    power = 0.8,
+    d = res_1c$estimate,
+    sig.level = alpha,
+    type = "paired",
+    alternative = "two.sided"
+)
 
 ## 1Cvii. 2 pts. Provide the value that you calculated.  
 
 # [As a comment, provide your answer to Q1Cvii.]
+# We would need 52 pairs of samples to reach a power of 0.8.
 
 ## 1Cviii. 2 pts. In 1-3 sentences, explain why the number of samples required to achieve 
 #  a power of 0.8 is different from what you calculated previously.
