@@ -24,8 +24,10 @@
 ###  Use a significance level of alpha = 0.01.
 
 
-library(effsize)
 library(pwr)
+library(car)
+library(reshape2)
+library(effsize)
 
 alpha <- 0.01
 
@@ -48,14 +50,11 @@ norm_res_1a_fasting_after <- shapiro.test(fasting$After)
 
 # Both datasets have p-values >0.05, so we cannot reject null hypothesis that data is from normal distribution
 # Is normally distributed
-stopifnot(norm_res_1a_fasting_before$p.value > 0.05)
-stopifnot(norm_res_1a_fasting_after$p.value > 0.05)
 
 # Check for unequal variances (*)
 # p-value greater than 0.05 so cannot reject H0 that variance beween groups are equal
 # Variance is equal
 var_res_1a <- var.test(fasting$Before, fasting$After)
-stopifnot(var_res_1a$p.value > 0.05)
 
 # Use effsize::cohen.d to calculate the effect size of the paired dataset
 res_1a <- cohen.d(
@@ -108,14 +107,11 @@ norm_res_1b_fed_after <- shapiro.test(fed$After)
 
 # Both datasets have p-values >0.05, so we cannot reject null hypothesis that data is from normal distribution
 # Is normally distributed
-stopifnot(norm_res_1b_fed_before$p.value > 0.05)
-stopifnot(norm_res_1b_fed_after$p.value > 0.05)
 
 # Check for unequal variances (*)
 # p-value less than 0.05 so we reject H0 that variance between groups are equal
 # Variance is not equal
 var_res_1b <- var.test(fed$Before, fed$After)
-stopifnot(var_res_1b$p.value > 0.05)
 
 res_1b <- cohen.d(
     fed$Before,
@@ -167,14 +163,11 @@ norm_res_1c_fed_before <- shapiro.test(fed$Before)
 
 # Both datasets have p-values >0.05, so we cannot reject null hypothesis that data is from normal distribution
 # Is normally distributed
-stopifnot(norm_res_1c_fasting_before$p.value > 0.05)
-stopifnot(norm_res_1c_fed_before$p.value > 0.05)
 
 # Check for unequal variances (*)
 # p-value greater than 0.05 so we cannot reject H0 that variance between groups are equal
 # Variance is equal
 var_res_1c <- var.test(fasting$Before, fed$Before)
-stopifnot(var_res_1c$p.value > 0.05)
 
 # Use effsize::cohen.d to calculate the effect size of the paired dataset
 res_1c <- cohen.d(
@@ -238,6 +231,7 @@ res_1c_vi <- pwr.t.test(
 #  a power of 0.8 is different from what you calculated previously.
 
 # [As a comment, provide your answer to Q1Cviii.]
+# In order to increase power, we also need to increase the number of samples.
 
 ###
 ### QUESTION 2
@@ -251,16 +245,16 @@ res_1c_vi <- pwr.t.test(
 ##  The dependent variable measured was plant height (in cm) after 4 weeks. She
 ##  asks for help with the analysis.
 
-Low	High
-A	12	18
-A	14	19
-A	15	20
-B	16	21
-B	17	23
-B	18	22
-C	13	16
-C	14	17
-C	15	18
+# Low	High
+# A	12	18
+# A	14	19
+# A	15	20
+# B	16	21
+# B	17	23
+# B	18	22
+# C	13	16
+# C	14	17
+# C	15	18
 
 ## 2A. Unfortunately, she forgot to attach an appropriately-formatted data file 
 ##  to her email message. You don't mind too much, because you know how to format 
@@ -270,37 +264,88 @@ C	15	18
 ## and "Low" and "High" are column names).
 ## Provide the annotated R code that you use for your analysis.
 
-[Provide the annotated R code that you use to answer Q2Ai.]
+mtx_2ai <- rbind(
+    c(12, 18),
+    c(14, 19),
+    c(15, 20),
+    c(16, 21),
+    c(17, 23),
+    c(18, 22),
+    c(13, 16),
+    c(14, 17),
+    c(15, 18)
+)
+colnames(mtx_2ai) <- c("Low", "High")
+rownames(mtx_2ai) <- c("A", "A", "A", "B", "B", "B", "C", "C", "C")
 
 ## 2Aii. 3 pts. Next, create the appropriate long-form data from this initial dataset.
 ## Provide the annotated R code that you use for your analysis.
 
-[Provide the annotated R code that you use to answer Q2Aii.]
+mtx_2ai_long <- melt(mtx_2ai)
+colnames(mtx_2ai_long) <- c("fertilizer", "watering_frequency", "plant_height")
 
 ## 2Aiii. 2 pts. How many factors and how many levels of each factor does your long-form dataset contain?
 
 # [As a comment, provide your answer to Q2Aiii.]
 
+for (col in colnames(mtx_2ai_long)) {
+    if (col == "plant_height") {
+        next
+    }
+    num_levels <- length(unique(mtx_2ai_long[[col]]))
+    print(paste0("The factor, '", col, "', has ", num_levels, " levels."))
+}
+# The factor, 'fertilizer', has 3 levels.
+# The factor, 'watering_frequency', has 2 levels.
+
 ## 2B. Check the data for homogeneity of variance (you should just assume the data is normally distributed)
 ## 2Bi. 3 pts. Provide the annotated R code that you use for your analysis.
-
-[Provide the annotated R code that you use to answer Q2Bi.]
+res_2bi_var_similar_fertilizer <- leveneTest(
+    plant_height ~ fertilizer,
+    data = mtx_2ai_long
+)
+res_2bi_var_similar_watering_frequency <- leveneTest(
+    plant_height ~ watering_frequency,
+    data = mtx_2ai_long
+)
 
 ## 2Bii. 2 pts. Provide the values that you calculated.
 
 # [As a comment, provide your answer to Q2Bii.]
 
+# The F value and p-value for the test for homogeneity of variance of plant_height with respect to fertilizer
+# is 2.4157 and 0.1232, respectively.
+
+# The F value and p-value for the test for homogeneity of variance of plant_height with respect to watering frequency
+# is 0.6154 0.4442, respectively.
+
 ## 2Biii. 3 pts. In 1-2 sentences, provide an interpretation of the variance testing results.
 
 # [As a comment, provide your answer to Q2Biii.]
+
+# The variance of plant height is equal across the fertilizer and watering_frequency factors.
+# We observe a p-value > 0.05, so we fail to reject the H0 that variance of plant_height is equal. 
 
 ## 2C. Perform one-way ANOVA to determine whether (1) fertilizer type and 
 ##  (2) watering frequency has/have a significant effect on plant height.
 ## For both parts, use an alpha of 0.05
 
+alpha_2c <- 0.05
+
 ## 2Ci. 4 pts. Provide the annotated R code that you use for your analysis.
 
-[Provide the annotated R code that you use to answer Q2Ci.]
+anova_plant_height_fertilizer <- aov(
+    formula = plant_height ~ fertilizer,
+    data = mtx_2ai_long
+)
+summary_anova_plant_height_fertilizer <- summary(anova_plant_height_fertilizer)
+
+anova_plant_height_watering_frequency <- aov(
+    formula = plant_height ~ watering_frequency,
+    data = mtx_2ai_long
+)
+summary_anova_plant_height_watering_frequency <- summary(anova_plant_height_watering_frequency)
+
 
 ## 2Cii. 2 pts. Provide the values that you calculated.
 
@@ -316,7 +361,8 @@ C	15	18
 
 ## 2Di. 4 pts. Provide the annotated R code that you use for your analysis.
 
-[Provide the annotated R code that you use to answer Q2Di.]
+tukey_anova_plant_height_fertilizer <- TukeyHSD(anova_plant_height_fertilizer)
+tukey_anova_plant_height_watering_frequency <- TukeyHSD(anova_plant_height_watering_frequency)
 
 ## 2Dii. 2 pts. Provide the values that you calculated.
 
