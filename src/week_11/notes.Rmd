@@ -1,0 +1,91 @@
+# Correlation & Regression
+
+## covariance
+
+* can be negative
+* dependent on data scale. not used because of this
+
+```
+sum((x-x_mean) * (y-y_mean)) / n -1
+```
+
+## Correlation Coefficient
+
+```
+r = covar(x,y) / sqrt(var(x) * var(y))
+```
+
+* between -1 and 1
+* level and direction of association between x and y variables
+* independent of data scale
+
+With R:
+```r
+# covariance
+cov(x, y, method = "pearson")
+# correlation
+cor(x, y)
+# correlation with p-value
+cor.test(x, y)
+```
+
+Very sensitive to outliers.
+
+* **Use Spearman test**
+    * ranks the data values and correlate the ranks (Wilcox test)
+* Common with data with zero-values
+    * ex. gene expression data
+ 
+## Linear models
+The change in effect is directly proportional to the change in cause
+
+Random errors (residuals) that cause points to deviate from model
+
+* follow normal distribution
+
+Best line
+
+* calculate sum of the square of the errors for each line
+* minimize sum = best fit line
+    * Will always go through xmean and ymean
+
+Variance of residuals
+
+## R^2
+
+* measure of how much of variance is explained by regression
+* Range from 0 - 1:
+    * 0 - regression explains none of variance
+    * 1 - regression explains all of the variance
+
+```
+# Based on residuals
+(var(total) - var(residuals)) / var(total)
+# Or...
+r ** 2
+```
+
+residuals
+
+* Must be linear
+* Variance must be constant (homoscedasticity)
+
+## Linear models with R
+```r
+# Exam is dependent variable
+# Quiz is the independent variable
+ms.lm <- lm(Exam ~ Quiz, data = ms)
+ms.lm
+```
+
+Then to get rest of stats
+```r
+summary(ms.lm)
+```
+
+To get residuals
+```r
+ms.lm$residuals
+# Or
+residuals(ms.lm)
+```
