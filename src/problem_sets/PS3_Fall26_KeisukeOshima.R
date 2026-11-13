@@ -23,14 +23,16 @@
 ###  that they did not fast. These datasets are in Canvas as "Glucose_data_PS3.RData"
 ###  Use a significance level of alpha = 0.01.
 
-
+# Load libaries
 library(pwr)
 library(car)
 library(reshape2)
 library(effsize)
 
+# Global alpha for Q1
 alpha <- 0.01
 
+# Load glucose data
 load("Glucose_data_PS3.RData")
 
 ##   
@@ -62,6 +64,7 @@ res_1a <- cohen.d(
     fasting$After,
     paired = T
 )
+# Use to calculate power using cohen's d from previous line.
 res_1a_pwr <- pwr.t.test(
     # Number of pairs for n
     n = length(fasting$Before),
@@ -113,11 +116,13 @@ norm_res_1b_fed_after <- shapiro.test(fed$After)
 # Variance is not equal
 var_res_1b <- var.test(fed$Before, fed$After)
 
+# Calculate effect size
 res_1b <- cohen.d(
     fed$Before,
     fed$After,
     paired = T
 )
+# Use effect size and determine power.
 res_1b_pwr <- pwr.t.test(
     # Number of pairs for n
     n = length(fed$Before),
@@ -214,6 +219,7 @@ res_1c_pwr <- pwr.t2n.test(
 
 ##  3 pts. Provide the annotated R code that you use for your calculations.
 
+# Use to calculate n for a given power and our cohen d estimate from before
 res_1c_vi <- pwr.t.test(
     power = 0.8,
     d = res_1c$estimate,
@@ -225,13 +231,15 @@ res_1c_vi <- pwr.t.test(
 ## 1Cvii. 2 pts. Provide the value that you calculated.  
 
 # [As a comment, provide your answer to Q1Cvii.]
+
 # We would need 52 pairs of samples to reach a power of 0.8.
 
 ## 1Cviii. 2 pts. In 1-3 sentences, explain why the number of samples required to achieve 
 #  a power of 0.8 is different from what you calculated previously.
 
 # [As a comment, provide your answer to Q1Cviii.]
-# In order to increase power, we also need to increase the number of samples.
+
+# In order to increase power, we also need to increase the number of samples. This is because beta decreases with sample size.
 
 ###
 ### QUESTION 2
@@ -288,6 +296,7 @@ colnames(mtx_2ai_long) <- c("fertilizer", "watering_frequency", "plant_height")
 
 # [As a comment, provide your answer to Q2Aiii.]
 
+# Loop through columns that are factors and get length to write comment
 for (col in colnames(mtx_2ai_long)) {
     if (col == "plant_height") {
         next
@@ -300,6 +309,9 @@ for (col in colnames(mtx_2ai_long)) {
 
 ## 2B. Check the data for homogeneity of variance (you should just assume the data is normally distributed)
 ## 2Bi. 3 pts. Provide the annotated R code that you use for your analysis.
+
+# plant height dependent variable
+# fertilizer/plant height independent variable
 res_2bi_var_similar_fertilizer <- leveneTest(
     plant_height ~ fertilizer,
     data = mtx_2ai_long
@@ -330,30 +342,41 @@ res_2bi_var_similar_watering_frequency <- leveneTest(
 ##  (2) watering frequency has/have a significant effect on plant height.
 ## For both parts, use an alpha of 0.05
 
-alpha_2c <- 0.05
+alpha_2 <- 0.05
 
 ## 2Ci. 4 pts. Provide the annotated R code that you use for your analysis.
 
+# Dependent variable is plant height
+# Independent variable is fertilizer
 anova_plant_height_fertilizer <- aov(
     formula = plant_height ~ fertilizer,
     data = mtx_2ai_long
 )
+# Get F and p-value from anova 
 summary_anova_plant_height_fertilizer <- summary(anova_plant_height_fertilizer)
 
+# Dependent variable is plant height
+# Independent variable is watering_frequency
 anova_plant_height_watering_frequency <- aov(
     formula = plant_height ~ watering_frequency,
     data = mtx_2ai_long
 )
+# Get F and p-value from anova 
 summary_anova_plant_height_watering_frequency <- summary(anova_plant_height_watering_frequency)
-
 
 ## 2Cii. 2 pts. Provide the values that you calculated.
 
 # [As a comment, provide your answer to Q2Cii.]
 
+# For fertilizer's effect on plant height, the F-value is 3.7 with a significant p-value of 0.0494.
+# For watering frequency's effect on plant height, the F-value is 19.51 with a significant p-value of 0.000432.
+
 ## 2Ciii. 3 pts. In 1-2 sentences, provide an interpretation of the ANOVA results.
 
 # [As a comment, provide your answer to Q2Ciii.]
+
+# Fertilizer has a significant effect (0.0494 < 0.05) on plant height
+# Watering frequency has a significant effect (0.000432 < 0.05) on plant height.
 
 ## 2D. Use R to perform the appropriate multi-comparison tests needed
 ##  to determine which pairs of treatments result in differential plant growth 
@@ -361,6 +384,7 @@ summary_anova_plant_height_watering_frequency <- summary(anova_plant_height_wate
 
 ## 2Di. 4 pts. Provide the annotated R code that you use for your analysis.
 
+# Get directionality, magnitude, and adjusted p-value for pairs of factors from anovas
 tukey_anova_plant_height_fertilizer <- TukeyHSD(anova_plant_height_fertilizer)
 tukey_anova_plant_height_watering_frequency <- TukeyHSD(anova_plant_height_watering_frequency)
 
@@ -368,9 +392,16 @@ tukey_anova_plant_height_watering_frequency <- TukeyHSD(anova_plant_height_water
 
 # [As a comment, provide your answer to Q2Dii.]
 
+# The difference in plant height between B and A fertilizer is 3.167 with an adjusted p-value of 0.137.
+# The difference in plant height between C and A fertilizer is -0.833 with an adjusted p-value of 0.854.
+# The difference in plant height between C and B fertilizer is 4.00 with an adjusted p-value of 0.0519.
+
+# The difference in plant height between High and Low watering frequency is 4.44 with an adjusted p-value of 0.000432.
+
 ## 2Diii. 4 pts. In 2-4 sentences, provide an interpretation of the results.
 
 # [As a comment, provide your answer to 2Diii]
+# There is a significant (p-val: 0.000432 < 0.05) positive difference (4.44) in mean plant height between the high and low watering frequency.
 
 ###
 ### QUESTION 3 
@@ -382,7 +413,14 @@ tukey_anova_plant_height_watering_frequency <- TukeyHSD(anova_plant_height_water
 ## 3A. 5 pts Use the R function plot() to create a scatterplot from columns x and y of "plotting". 
 ## Provide your code.
 
-[Provide the annotated R code that you use to answer Q3A.]
+load("plotting.RData")
+
+# Create PDF device and file
+pdf("plot_3b.pdf")
+# Plot x and y
+plot(plotting$x, plotting$y)
+# Close PDF device
+dev.off()
 
 ## 3B. 5 pts. Save your plot as a .pdf file, using the “export” menu. 
 ## Upload the PDF to Canvas.
@@ -395,7 +433,18 @@ tukey_anova_plant_height_watering_frequency <- TukeyHSD(anova_plant_height_water
 
 ## 3Ci. 4 pts. Provide the code for 3C.
 
-[Provide the annotated R code that you use to answer Q3C.]
+# Add new column, adj with bonferroni corrected p-values
+plotting$adj_bonf <- p.adjust(plotting$raw, method = "bonferroni")
+
+# New PDF device with new file
+pdf("plot_3c.pdf")
+# Plot x and y but subset plotting dataframe where adjusted p-value is less than 0.05
+plot(
+    plotting[plotting$adj_bonf <= 0.05, ]$x,
+    plotting[plotting$adj_bonf <= 0.05, ]$y
+)
+# Close PDF device
+dev.off()
 
 ## 3Cii. 2 pts. Upload the PDF to Canvas.
 
@@ -405,7 +454,18 @@ tukey_anova_plant_height_watering_frequency <- TukeyHSD(anova_plant_height_water
 
 ## 3Di. 3 pts. Provide your code for Q3D.
 
-[Provide the annotated R code that you use to answer Q3D.]
+plotting$adj_bh <- p.adjust(plotting$raw, method = "BH")
+
+# New PDF device with new file
+pdf("plot_3d.pdf")
+# Plot x and y but subset plotting dataframe where adjusted p-value is less than 0.05
+# T-rex!
+plot(
+    plotting[plotting$adj_bh <= 0.05, ]$x,
+    plotting[plotting$adj_bh <= 0.05, ]$y
+)
+# Close PDF device
+dev.off()
 
 ## 3Dii. 2 pts. Upload the PDF to Canvas.
 
@@ -416,7 +476,15 @@ tukey_anova_plant_height_watering_frequency <- TukeyHSD(anova_plant_height_water
 
 ## 3Ei. 4 pts. Provide your code and save your personalized plot as a .pdf file, using the “export” menu. 
 
-[Provide the annotated R code that you use to answer Q3E.]
+pdf("plot_3e.pdf")
+plot(
+    plotting[plotting$adj_bh <= 0.05, ]$x,
+    plotting[plotting$adj_bh <= 0.05, ]$y,
+    main = "Hello, my name is Keith",
+    col = "chocolate",
+    pch = 20
+)
+dev.off()
 
 ## 3Eii. 4 pts. Upload the PDF plot to Canvas.
 

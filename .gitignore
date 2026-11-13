@@ -6,4 +6,6 @@
 *.html
 notes_files
 
+# Rdata and other objects at root of project directory
 /*.RData
+/*.pdf
