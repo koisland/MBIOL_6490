@@ -1,0 +1,64 @@
+# R: Into the tidyverse
+
+## Class exercise
+```{r}
+load("data_three.RData")
+dataset <- data1
+dataset_other <- data2
+x_mean <- mean(dataset$x)
+y_mean <- mean(dataset$y)
+x_stdev <- sd(dataset$x)
+y_stdev <- sd(dataset$y)
+res <- lm(y ~ x, dataset)
+summary(res)
+```
+
+```{r}
+plot(dataset$x, dataset$y)
+```
+
+## R wrangling
+With `tidyverse` and `ggplot` + `dplyr`.
+```{r}
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
+```
+
+```r
+# Group by fertilizer and summarize the height of mean
+plants_long %>%
+    group_by(fertilizer) %>%
+    summarize(mean_h = mean(height))
+```
+
+Overlaps so use jitter.
+```r
+ggplot(long_drugs) +
+    # geom_point(aes(x=Dose, y=Effect, color=Dose), cex=3)
+    geom_jitter(aes(x=Dose, y=Effect, color=Dose), cex=3)
+```
+
+Use boxplot
+```r
+ggplot(long_drugs) +
+    geom_boxplot(aes(x=Dose, y=Effect, color=Dose)) +
+    geom_jitter(aes(x=Dose, y=Effect, color=Dose), cex=3)
+```
+
+Also beeswarm.
+
+With multiple variables:
+```r
+# Stacked bar
+# Add position = "dodge" to spread out
+ggplot(Pet_long) +
+    geom_col(aes(x=Pet, y=Number, fill=County))
+```
+
+Facetting.
+```r
+ggplot(Pet_long) +
+    geom_col(aes(x=Pet, y=Number, fill=County)) +
+    facet_wrap(~ County)
+```
